@@ -34,3 +34,60 @@ func (p *ProductDB) Get(id string) (application.ProductInterface, error) {
 
 	return &product, err
 }
+
+func (p *ProductDB) create(product application.ProductInterface) (application.ProductInterface, error) {
+	stmt, err := p.db.Prepare("INSERT INTO products (name, price, status) VALUES (?, ?, ?)")
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = stmt.Exec(
+		product.GetName(),
+		product.GetPrice(),
+		product.GetStatus(),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	return product, nil
+}
+
+func (p *ProductDB) update(product application.ProductInterface) (application.ProductInterface, error) {
+	stmt, err := p.db.Prepare("UPDATE products SET name = ?, price = ?, status = ? where id = ?")
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = stmt.Exec(
+		product.GetName(),
+		product.GetPrice(),
+		product.GetStatus(),
+		product.GetID(),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	return product, nil
+}
+
+func (p *ProductDB) Save(product application.ProductInterface) (application.ProductInterface, error) {
+	var rows int
+
+	p.db.QueryRow("SELECT COUNT(*) FROM products WHERE id = ?", product.GetID()).Scan(&rows)
+
+	if rows == 0 {
+		return p.create(product)
+	}
+
+	return p.update(product)
+}
