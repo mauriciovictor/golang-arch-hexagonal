@@ -36,13 +36,14 @@ func (p *ProductDB) Get(id string) (application.ProductInterface, error) {
 }
 
 func (p *ProductDB) create(product application.ProductInterface) (application.ProductInterface, error) {
-	stmt, err := p.db.Prepare("INSERT INTO products (name, price, status) VALUES (?, ?, ?)")
+	stmt, err := p.db.Prepare("INSERT INTO products (id, name, price, status) VALUES (?, ?, ?, ?)")
 
 	if err != nil {
 		return nil, err
 	}
 
 	_, err = stmt.Exec(
+		product.GetID(),
 		product.GetName(),
 		product.GetPrice(),
 		product.GetStatus(),

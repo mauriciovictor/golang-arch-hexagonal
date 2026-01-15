@@ -16,7 +16,7 @@ func (p ProductService) Get(id string) (ProductInterface, error) {
 	return product, nil
 }
 
-func (p ProductService) Save(name string, price float64) (ProductInterface, error) {
+func (p ProductService) Create(name string, price float64) (ProductInterface, error) {
 	product := NewProduct(name, price)
 
 	_, err := product.IsValid()

@@ -32,7 +32,7 @@ func TestProductService_Save(t *testing.T) {
 	persistence.EXPECT().Save(gomock.Any()).Return(product, nil).AnyTimes()
 	service := application.ProductService{Persistence: persistence}
 
-	result, err := service.Save("Product 1", 100)
+	result, err := service.Create("Product 1", 100)
 	require.Nil(t, err)
 	require.Equal(t, product, result)
 }
