@@ -73,7 +73,7 @@ func (p *Product) IsValid() (bool, error) {
 		return false, errors.New("Invalid Status")
 	}
 
-	if p.Price <= 0 {
+	if p.Price < 0 {
 		return false, errors.New("Invalid Price")
 	}
 
